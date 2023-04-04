@@ -53,15 +53,16 @@ class MessageHandler:
             # TODO: Implement the ability to respond to prompts without !generate
             # This will hopefully, not respond to an image attachment.
             print("Attempting to run generate command?")
-            await self.invoke_command(message, "generate")
+            await self.invoke_command(message, "generate", message.content[1:])
         await self.bot.process_commands(message)
     
-    async def invoke_command(self, message, command_name):
+    async def invoke_command(self, message, command_name, modified_content):
         # Get the command object
         ctx = await self.bot.get_context(message)
         command = self.bot.get_command(command_name)
         if command is not None:
-            await command(ctx, prompt=' '.join(ctx.message.content.split()))
+            await command(ctx, prompt=' '.join(modified_content.split()))
+
     
     async def _handle_image_attachment(self, message):
         # Yo, check if the bot is mentioned, bro!
